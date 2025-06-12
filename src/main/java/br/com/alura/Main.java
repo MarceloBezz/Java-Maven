@@ -1,18 +1,28 @@
 package br.com.alura;
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.List;
+
+import com.opencsv.bean.CsvToBeanBuilder;
+
+import br.com.alura.model.Produto;
+import br.com.alura.service.TraduzProdutoService;
+
 public class Main {
-    public static void main(String[] args){
-        // Press Alt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+    public static void main(String[] args) throws IllegalStateException, FileNotFoundException{
+        List<Produto> beans = new CsvToBeanBuilder(new FileReader("src/main/resources/products.csv"))
+                    .withType(Produto.class).build().parse();
 
-        // Press Shift+F10 or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
+        for (Produto produto : beans) {
+            System.out.println(produto);
+        }
 
-            // Press Shift+F9 to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Ctrl+F8.
-            System.out.println("i = " + i);
+        TraduzProdutoService traducaoService = new TraduzProdutoService();
+
+        for (Produto produto : beans) {
+            traducaoService.traduzir(produto);
+            System.out.println(produto);
         }
     }
 }
